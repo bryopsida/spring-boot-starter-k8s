@@ -2,7 +2,7 @@ FROM alpine:latest AS zulu_base
 RUN apk add --no-cache wget && \
   wget -P /etc/apk/keys/ https://cdn.azul.com/public_keys/alpine-signing@azul.com-5d5dc44c.rsa.pub && \
   echo "https://repos.azul.com/zulu/alpine" | tee -a /etc/apk/repositories && \
-  apk update zulu17-jre-headless --no-cache && \
+  apk add zulu17-jre-headless --no-cache && \
   apk del --no-cache wget
 
 ENV USER=docker
@@ -20,7 +20,6 @@ RUN addgroup -g ${GID} docker && \
     --uid "$UID" \
     "$USER"
 USER docker
-ARG VERSION
 COPY ./build/libs/spring-boot-template-*.jar /app/spring-boot-starter.jar
+COPY ./docker-entrypoint.sh /app/docker-entrypoint.sh
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
-CMD [ "java", "-jar", "/app/spring-boot-starter.jar" ]
