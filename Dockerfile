@@ -19,3 +19,8 @@ RUN addgroup -g ${GID} docker && \
     --no-create-home \
     --uid "$UID" \
     "$USER"
+USER docker
+ARG VERSION
+COPY ./build/libs/spring-boot-template-*.jar /app/spring-boot-starter.jar
+ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+CMD [ "java", "-jar", "/app/spring-boot-starter.jar" ]

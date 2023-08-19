@@ -1,0 +1,20 @@
+metadata:
+  namespace: ${helm_namespace}
+  labels:
+    project: ${name}
+    version: ${version}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      namespace: ${helm_namespace}
+      labels:
+        project: ${name}
+        version: ${version}
+    spec:
+      containers:
+        - resources:
+            limits:
+              memory: ${limits_memory}
+            requests:
+              memory: ${requests_memory}

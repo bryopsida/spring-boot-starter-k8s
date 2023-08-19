@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'rocks.curium'
-version gitVersion()
+version = gitVersion().replace(".dirty", "-dirty")
 
 java {
 	sourceCompatibility = '17'
@@ -46,8 +46,9 @@ kubernetes {
         image {
             name = 'ghcr.io/bryopsida/spring-boot-k8s-starter'
             build {
-                contextDir = file('.')
-                dockerFile = 'Dockerfile'
+				assembly {
+                    name = 'target'
+                }
             }
         }
     }
