@@ -5,6 +5,7 @@ plugins {
 	id 'org.eclipse.jkube.kubernetes' version '1.13.1'
 	id 'com.palantir.git-version' version '3.0.0'
 	id 'com.diffplug.spotless' version '6.20.0'
+    id 'jacoco'
 }
 
 group = 'io.github.bryopsida'
@@ -12,6 +13,22 @@ version = gitVersion().replace(".dirty", "-dirty")
 
 java {
 	sourceCompatibility = '17'
+}
+
+javadoc {
+	source = sourceSets.main.allJava
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	jacoco {
+		excludes = ['*generated*']
+	}
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
 }
 
 configurations {
