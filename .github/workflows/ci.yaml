@@ -26,7 +26,7 @@ jobs:
         gradle-version: 8.3
         arguments: k8sResource k8sHelm
     - name: Run helm lint
-      run: helm lint build/jkube/helm/spring-boot-template
+      run: helm lint build/jkube/helm/spring-boot-template/kubernetes/
   java-unit-tests:
     name: "Test"
     runs-on: ubuntu-latest
@@ -61,7 +61,7 @@ jobs:
       - name: Upload Coverage Reports
         uses: actions/upload-artifact@v3
         with:
-            name: coverage
+            name: coverage-reports
             path: build/reports
             retention-days: 7
 
