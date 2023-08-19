@@ -7,7 +7,7 @@ plugins {
 	id 'com.diffplug.spotless' version '6.20.0'
 }
 
-group = 'rocks.curium'
+group = 'io.github.bryopsida'
 version = gitVersion().replace(".dirty", "-dirty")
 
 java {

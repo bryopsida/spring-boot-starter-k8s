@@ -1,5 +1,5 @@
 /* (C) 2023 */
-package rocks.curium.springboottemplate;
+package io.github.springboottemplate;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

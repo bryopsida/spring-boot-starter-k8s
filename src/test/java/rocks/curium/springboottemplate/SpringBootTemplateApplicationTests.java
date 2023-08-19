@@ -1,5 +1,5 @@
 /* (C) 2023 */
-package rocks.curium.springboottemplate;
+package io.github.springboottemplate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
