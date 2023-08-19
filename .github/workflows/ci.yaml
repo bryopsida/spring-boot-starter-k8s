@@ -23,7 +23,7 @@ jobs:
     - name: Execute Gradle Tasks
       uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: 8.2
+        gradle-version: 8.3
         arguments: k8sResource k8sHelm
     - name: Run helm lint
       run: helm lint build/jkube/helm/spring-boot-template
