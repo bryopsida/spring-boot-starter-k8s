@@ -6,7 +6,28 @@ on:
       - main
 
 jobs:
-  pull_request:
+  helm-lint:
+    name: "Helm Lint"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-java@v3
+      with:
+        distribution: "zulu"
+        java-version: "17"
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Execute Gradle Tasks
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: 8.2
+        arguments: k8sResource k8sHelm
+    - name: Run helm lint
+      run: helm lint build/jkube/helm/spring-boot-template
+  java-unit-tests:
     name: "Test"
     runs-on: ubuntu-latest
     steps:
