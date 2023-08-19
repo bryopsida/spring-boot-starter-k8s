@@ -49,6 +49,19 @@ jobs:
       - name: Upload Build
         uses: actions/upload-artifact@v3
         with:
-          name: build
-          path: build
+          name: jars
+          path: build/libs
           retention-days: 7
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: build/jacoco
+          retention-days: 7
+      - name: Upload Coverage Reports
+        uses: actions/upload-artifact@v3
+        with:
+            name: coverage
+            path: build/reports
+            retention-days: 7
+
