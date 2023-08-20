@@ -38,6 +38,8 @@ jobs:
     name: "Test"
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -72,6 +74,10 @@ jobs:
             name: coverage-reports
             path: build/reports
             retention-days: 7
+      - name: Output Gradle Version
+        id: version
+        run: |
+          echo "version=$(./gradlew printVersion --console=plain | head -n 3 | tail -1)" >> $GITHUB_OUTPUT
   build-image:
     name: Build Image
     runs-on: ubuntu-latest
@@ -120,7 +126,7 @@ jobs:
         id: default-branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: echo "::set-output name=name::$(gh repo view --json defaultBranchRef --jq .defaultBranchRef.name)"
+        run: echo ":name=$(gh repo view --json defaultBranchRef --jq .defaultBranchRef.name) >> $GITHUB_OUTPUT"
       - name: Extract Docker metadata
         id: meta
         timeout-minutes: 5
@@ -136,6 +142,7 @@ jobs:
                 type=semver,pattern={{major}}.{{minor}}
                 type=sha
                 type=raw,value={{date 'YYYYMMDD'}}-{{sha}}
+                type=raw,value=${{ needs.java-unit-tests.outputs.version }}
       - name: Build Docker image
         id: build
         timeout-minutes: 25
@@ -201,8 +208,10 @@ jobs:
             registry: ghcr.io
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Namespace
+        run: kubectl create namespace test
       - name: Create Pull Secret in K3D
-        run: kubectl create secret docker-registry regcred --docker-username=bryopsida --docker-password=$GITHUB_TOKEN --docker-server=ghcr.io
+        run: kubectl --namespace test create secret docker-registry regcred --docker-username=bryopsida --docker-password=$GITHUB_TOKEN --docker-server=ghcr.io
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Download Artifacts
@@ -213,7 +222,7 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.4.0
       - name: Install
-        run: ct install --chart-dirs chart/ --charts .
+        run: ct install --charts build/jkube/helm/spring-boot-template/kubernetes --namespace test
   helm-upgrade:
     name: Test Upgrade
     runs-on: ubuntu-latest
@@ -239,8 +248,10 @@ jobs:
             registry: ghcr.io
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Namespace
+        run: kubectl create namespace test
       - name: Create Pull Secret in K3D
-        run: kubectl create secret docker-registry regcred --docker-username=bryopsida --docker-password=$GITHUB_TOKEN --docker-server=ghcr.io
+        run: kubectl --namespace test create secret docker-registry regcred --docker-username=bryopsida --docker-password=$GITHUB_TOKEN --docker-server=ghcr.io
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v3
@@ -254,4 +265,4 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.4.0
       - name: Install
-        run: ct install --chart-dirs chart/ --charts .
+        run: ct install --charts build/jkube/helm/spring-boot-template/kubernetes --namespace test

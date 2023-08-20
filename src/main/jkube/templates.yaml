@@ -4,6 +4,14 @@ parameters:
     value: "512Mi"
   - name: requests_memory
     value: "256Mi"
+  - name: pull_secret
+    value: "regcred"
+  - name: image_repo
+    value: "ghcr.io/bryopsida/${name}"
+  - name: image_tag
+    value: "${version}"
+  - name: image_pull_policy
+    value: "IfNotPresent"
   - name: helm_namespace
     value: |
         {{ .Release.Namespace }}
