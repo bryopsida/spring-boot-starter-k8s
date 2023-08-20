@@ -210,8 +210,10 @@ jobs:
         with:
           name: chart
           path: chart/
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.5.0
       - name: Install
-        run: helm upgrade --install test-app ./chart/ --debug --wait
+        run: ct install --chart-dirs chart/ --charts .
   helm-upgrade:
     name: Test Upgrade
     runs-on: ubuntu-latest
@@ -249,5 +251,7 @@ jobs:
         with:
           name: chart
           path: chart/
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.5.0
       - name: Install
-        run: helm upgrade --install test-app ./chart/ --debug --wait
+        run: ct install --chart-dirs chart/ --charts .
