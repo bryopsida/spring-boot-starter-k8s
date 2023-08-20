@@ -69,6 +69,9 @@ jobs:
   build-image:
     name: Build Image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     needs:
       - helm-lint
       - java-unit-tests
