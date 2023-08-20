@@ -22,4 +22,5 @@ RUN addgroup -g ${GID} docker && \
 USER docker
 COPY ./build/libs/spring-boot-template-*.jar /app/spring-boot-starter.jar
 COPY ./docker-entrypoint.sh /app/docker-entrypoint.sh
+EXPOSE 8080/tcp
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
