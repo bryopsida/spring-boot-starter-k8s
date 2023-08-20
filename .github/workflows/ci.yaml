@@ -172,12 +172,46 @@ jobs:
             cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
             cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
             platforms: linux/amd64,linux/arm64
-  helm-test:
+  helm-install:
+    name: Test Install
+    runs-on: ubuntu-latest
+    needs:
+      - build-image
+    strategy:
+      matrix:
+        k8s-version:
+          - v1.27.4-k3s1
+          - v1.26.7-k3s1
+          - v1.25.12-k3s1
+    timeout-minutes: 15
+    steps:
+      - name: Install K3D
+        run: wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+      - name: Start K3D
+        run: k3d cluster create test-cluster --image rancher/k3s:TAG
+      - name: Log into registry
+        timeout-minutes: 5
+        uses: docker/login-action@553b6f090f15b58451081ce157ff1929a266131d
+        with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Secret in K3D
+        run: kubectl create secret docker-registry regcred --docker-username=bryopsida --docker-password=$GITHUB_TOKEN --docker-server=ghcr.io
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+  helm-upgrade:
+    name: Test Upgrade
     runs-on: ubuntu-latest
     needs:
       - build-image
     timeout-minutes: 15
     steps:
+      - name: Install K3D
+        run: wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
       - name: Start K3D
         run: k3d cluster create test-cluster
       - name: Log into registry
@@ -191,3 +225,6 @@ jobs:
         run: kubectl create secret docker-registry regcred --docker-username=bryopsida --docker-password=$GITHUB_TOKEN --docker-server=ghcr.io
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
