@@ -74,7 +74,7 @@ jobs:
       - java-unit-tests
     timeout-minutes: 10
     env:
-      REGISTRY: ghcr.io/
+      REGISTRY: ghcr.io/bryopsida
       IMAGE_NAME: spring-boot-starter-k8s
     steps:
       - uses: actions/checkout@v3
