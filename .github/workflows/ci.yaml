@@ -156,8 +156,6 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ steps.short-sha.outputs.sha_tag }}
-          format: 'sarif'
-          output: 'scan-results.sarif'
       - name: Push image
         id: push
         timeout-minutes: 60
