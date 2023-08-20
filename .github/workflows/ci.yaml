@@ -99,7 +99,7 @@ jobs:
       - name: Setup Docker buildx
         id: buildx
         timeout-minutes: 4
-        uses: docker/setup-buildx-action@a946f06b5ddbde456d0115dc585e8dc3c7a0c3e0
+        uses: docker/setup-buildx-action@7703e82fbced3d0c9eec08dff4429c023a5fd9a9
       - name: Log into registry
         timeout-minutes: 5
         uses: docker/login-action@553b6f090f15b58451081ce157ff1929a266131d
@@ -115,7 +115,7 @@ jobs:
       - name: Extract Docker metadata
         id: meta
         timeout-minutes: 5
-        uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
+        uses: docker/metadata-action@0f8c876bafbf5dbce05c36682ec68e9a0274a48a
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -179,7 +179,7 @@ jobs:
         run: k3d cluster create test-cluster
       - name: Log into registry
         timeout-minutes: 5
-        uses: docker/login-action@a9794064588be971151ec5e7144cb535bcb56e36
+        uses: docker/login-action@553b6f090f15b58451081ce157ff1929a266131d
         with:
             registry: ghcr.io
             username: ${{ github.actor }}
