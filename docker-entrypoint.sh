@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-exec java -jar /app/spring-boot-starter.jar 
+exec java -jar /app/app.jar 
