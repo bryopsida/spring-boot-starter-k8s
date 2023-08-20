@@ -188,7 +188,7 @@ jobs:
       - name: Install K3D
         run: wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
       - name: Start K3D
-        run: k3d cluster create test-cluster --image rancher/k3s:TAG
+        run: k3d cluster create test-cluster --image rancher/k3s:${{ matrix.k8s-version }}
       - name: Log into registry
         timeout-minutes: 5
         uses: docker/login-action@553b6f090f15b58451081ce157ff1929a266131d
