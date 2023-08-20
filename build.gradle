@@ -62,7 +62,7 @@ kubernetes {
 	offline = false
 	images {
         image {
-            name = 'ghcr.io/bryopsida/spring-boot-k8s-starter'
+            name = 'ghcr.io/bryopsida/spring-boot-starter-k8s'
             build {
 				assembly {
                     name = 'target'
@@ -87,7 +87,7 @@ kubernetes {
     resources {
         labels {
             all {
-                testProject = 'spring-boot-starter'
+                testProject = 'spring-boot-stater-k8s'
             }
         }
     }
