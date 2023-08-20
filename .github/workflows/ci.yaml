@@ -9,6 +9,7 @@ jobs:
   helm-lint:
     name: "Helm Lint"
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
     - uses: actions/checkout@v3
       with:
@@ -30,6 +31,7 @@ jobs:
   java-unit-tests:
     name: "Test"
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
         with:
@@ -70,6 +72,10 @@ jobs:
     needs:
       - helm-lint
       - java-unit-tests
+    timeout-minutes: 10
+    env:
+      REGISTRY: ghcr.io/
+      IMAGE_NAME: spring-boot-starter-k8s
     steps:
       - uses: actions/checkout@v3
         with:
@@ -121,14 +127,6 @@ jobs:
                 type=semver,pattern={{major}}.{{minor}}
                 type=sha
                 type=raw,value={{date 'YYYYMMDD'}}-{{sha}}
-      - name: Download Artifacts
-        uses: actions/download-artifact@v3
-        if: ${{ inputs.download_artifact != '' }}
-        with:
-            name: ${{ inputs.download_artifact }}
-            path: ${{ inputs.download_artifact_path }}
-      - name: Display structure before build
-        run: ls -R
       - name: Build Docker image
         id: build
         timeout-minutes: 25
@@ -171,3 +169,22 @@ jobs:
             cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
             cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
             platforms: linux/amd64,linux/arm64
+  helm-test:
+    runs-on: ubuntu-latest
+    needs:
+      - build-image
+    timeout-minutes: 15
+    steps:
+      - name: Start K3D
+        run: k3d cluster create test-cluster
+      - name: Log into registry
+        timeout-minutes: 5
+        uses: docker/login-action@a9794064588be971151ec5e7144cb535bcb56e36
+        with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Secret in K3D
+        run: kubectl create secret docker-registry regcred --docker-username=bryopsida --docker-password=$GITHUB_TOKEN --docker-server=ghcr.io
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

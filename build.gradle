@@ -105,6 +105,6 @@ spotless {
   }
   format 'styling', {
 	target '*.md', '*.yaml', '*.yml'
-    prettier().config(['tabWidth': 4])
+    prettier()
   }
 }
