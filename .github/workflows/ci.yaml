@@ -27,12 +27,12 @@ jobs:
         gradle-version: 8.3
         arguments: k8sResource k8sHelm
     - name: Run helm lint
-      run: helm lint build/jkube/helm/spring-boot-template/kubernetes/
+      run: helm lint build/jkube/helm/spring-boot-starter-k8s/kubernetes/
     - name: Upload Chart
       uses: actions/upload-artifact@v3
       with:
         name: chart
-        path: build/jkube/helm/spring-boot-template/kubernetes/
+        path: build/jkube/helm/spring-boot-starter-k8s/kubernetes/
         retention-days: 7
   java-unit-tests:
     name: "Test"
