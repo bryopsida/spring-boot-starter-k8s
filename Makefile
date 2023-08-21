@@ -1,3 +1,5 @@
+HELM_NAMESPACE ?= spring-boot-starter-k8s
+
 .PHONY: jar
 jar:
 	./gradlew bootJar
@@ -8,3 +10,12 @@ image: jar
 
 run:
 	docker run -p 8080:8080 -p 8081:8081 ghcr.io/bryopsida/spring-boot-starter-k8s:local
+
+create-namespace:
+	kubectl create namespace $(HELM_NAMESPACE)
+
+build-chart:
+	./gradlew k8sResource k8sHelm
+
+deploy: build-chart
+	helm --namespace=$(HELM_NAMESPACE) upgrade --install spring-boot-starter-k8s ./build/jkube/helm/spring-boot-starter-k8s/kubernetes/

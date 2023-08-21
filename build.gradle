@@ -75,6 +75,11 @@ kubernetes {
     }
     enricher {
         excludes = ['jkube-expose']
+        config {
+            'jkube-healthcheck-spring-boot' {
+                path = '/actuator/health'
+            }
+        }
     }
     generator {
         includes = ['spring-boot']
