@@ -5,6 +5,7 @@ plugins {
 	id 'org.eclipse.jkube.kubernetes' version '1.13.1'
 	id 'com.palantir.git-version' version '3.0.0'
 	id 'com.diffplug.spotless' version '6.20.0'
+    id 'org.liquibase.gradle' version '2.2.0'
     id 'jacoco'
 }
 
@@ -45,8 +46,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'net.logstash.logback:logstash-logback-encoder:6.3'
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+    liquibaseRuntime 'org.liquibase:liquibase-core:4.16.1'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+    liquibaseRuntime 'info.picocli:picocli:4.6.1'
+    liquibaseRuntime "org.postgresql:postgresql"
+    
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -58,6 +66,24 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+liquibase {
+  activities {
+    main {
+      changelogFile 'src/main/resources/db/spring-boot-starter.json'
+      username "postgres"
+      password "postgres"
+      logLevel "info"
+      classpath 'src/main/resources'
+      // the target
+      url 'jdbc:postgresql://localhost:5432/spring-boot-starter'
+      // the reference
+      referenceUrl "jdbc:postgresql://localhost:5432/spring-boot-starter-reference"
+      referenceUsername "postgres"
+      referencePassword "postgres"
+    }
+  }
 }
 
 kubernetes {
