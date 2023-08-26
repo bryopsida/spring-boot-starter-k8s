@@ -5,8 +5,8 @@ plugins {
 	id 'org.eclipse.jkube.kubernetes' version '1.13.1'
 	id 'com.palantir.git-version' version '3.0.0'
 	id 'com.diffplug.spotless' version '6.20.0'
-    id 'org.liquibase.gradle' version '2.2.0'
-    id 'jacoco'
+	id 'org.liquibase.gradle' version '2.2.0'
+	id 'jacoco'
 }
 
 group = 'io.github.bryopsida'
@@ -46,15 +46,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-  implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-  implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
-  implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
-  liquibaseRuntime 'org.liquibase:liquibase-core:4.16.1'
-  liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
-  liquibaseRuntime 'info.picocli:picocli:4.6.1'
-  liquibaseRuntime "org.postgresql:postgresql"
-    
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+	implementation 'org.postgresql:r2dbc-postgresql:1.0.2.RELEASE'
+	implementation 'org.postgresql:postgresql:42.6.0'
+
+	liquibaseRuntime 'org.liquibase:liquibase-core:4.16.1'
+	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+	liquibaseRuntime 'info.picocli:picocli:4.6.1'
+	liquibaseRuntime "org.postgresql:postgresql"
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -69,75 +71,76 @@ tasks.named('test') {
 }
 
 liquibase {
-  activities {
-    main {
-      changelogFile 'src/main/resources/db/spring-boot-starter.json'
-      username "postgres"
-      password "postgres"
-      logLevel "info"
-      classpath 'src/main/resources'
-      // the target
-      url 'jdbc:postgresql://localhost:5432/spring-boot-starter'
-      // the reference
-      referenceUrl "jdbc:postgresql://localhost:5432/spring-boot-starter-reference"
-      referenceUsername "postgres"
-      referencePassword "postgres"
-    }
-  }
+	activities {
+		main {
+		changelogFile 'classpath:/changelog/v1.json'
+		classpath "$rootDir/src/main/resources/db"
+		username "postgres"
+		password "postgres"
+		logLevel "info"
+		url 'jdbc:postgresql://localhost:5432/spring-boot-starter'
+		}
+	}
 }
 
 kubernetes {
 	offline = false
 	images {
-        image {
-            name = 'ghcr.io/bryopsida/spring-boot-starter-k8s'
-            build {
+		image {
+			name = 'ghcr.io/bryopsida/spring-boot-starter-k8s'
+			build {
 				assembly {
-                    name = 'target'
-                }
-            }
-        }
-    }
-    access {
-        namespace = 'default'
-    }
-    enricher {
-        excludes = ['jkube-expose']
-        config {
-            'jkube-healthcheck-spring-boot' {
-                path = '/actuator/health'
-            }
-        }
-    }
-    generator {
-        includes = ['spring-boot']
-        config {
-            'spring-boot' {
-                color = 'always'
-            }
-        }
-    }
-    resources {
-        labels {
-            all {
-                testProject = 'spring-boot-stater-k8s'
-            }
-        }
-    }
-    helm {
-    }
+					name = 'target'
+				}
+			}
+		}
+	}
+	access {
+		namespace = 'default'
+	}
+	enricher {
+		excludes = ['jkube-expose']
+		config {
+			'jkube-healthcheck-spring-boot' {
+				path = '/actuator/health'
+			}
+		}
+	}
+	generator {
+		includes = ['spring-boot']
+		config {
+			'spring-boot' {
+				color = 'always'
+			}
+		}
+	}
+	resources {
+		labels {
+			all {
+				testProject = 'spring-boot-stater-k8s'
+			}
+		}
+	}
+	helm {
+	}
 }
 spotless {
-  java {
-    importOrder()
-    removeUnusedImports()
-    cleanthat()
-    prettier(['prettier': '2.8.8', 'prettier-plugin-java': '2.2.0']).config(['parser': 'java', 'tabWidth': 4])
-    formatAnnotations()
-    licenseHeader '/* (C) $YEAR */'
-  }
-  format 'styling', {
-	target '*.md', '*.yaml', '*.yml'
-    prettier()
-  }
+	java {
+		importOrder()
+		removeUnusedImports()
+		cleanthat()
+		prettier(['prettier': '2.8.8', 'prettier-plugin-java': '2.2.0']).config(['parser': 'java', 'tabWidth': 4])
+		formatAnnotations()
+		licenseHeader '/* (C) $YEAR */'
+	}
+	format 'misc', {
+		target '*.gradle', '*.md', '.gitignore', '.yml'
+		trimTrailingWhitespace()
+		indentWithTabs()
+		endWithNewline()
+	}
+	format 'styling', {
+		target '*.md', '*.yaml', '*.yml'
+		prettier()
+	}
 }
