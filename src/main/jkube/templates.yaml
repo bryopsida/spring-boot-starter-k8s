@@ -10,6 +10,16 @@ parameters:
     value: "ghcr.io/bryopsida/${name}"
   - name: image_tag
     value: "${version}"
+  - name: "db_migration_job_image_repo"
+    value: "liquibase/liquibase"
+  - name: "db_migration_job_image_tag"
+    value: "latest"
+  - name: "database_host"
+    value: "postgres"
+  - name: "database_port"
+    value: "5432"
+  - name: "database_name"
+    value: "spring-boot-starter"
   - name: image_pull_policy
     value: "IfNotPresent"
   - name: helm_namespace

@@ -120,6 +120,12 @@ kubernetes {
 				testProject = 'spring-boot-stater-k8s'
 			}
 		}
+		configMap {
+			name = 'liquibase-change-log-v1'
+			entries = [{
+				file = 'src/main/resources/db/changelog/v1.json'
+			}]
+		}
 	}
 	helm {
 	}
