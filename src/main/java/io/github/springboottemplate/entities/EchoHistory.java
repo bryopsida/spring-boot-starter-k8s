@@ -1,7 +1,7 @@
 /* (C) 2023 */
 package io.github.springboottemplate.entities;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +18,5 @@ public class EchoHistory {
 
     private String message;
 
-    private Date timestamp;
+    private Instant timestamp;
 }

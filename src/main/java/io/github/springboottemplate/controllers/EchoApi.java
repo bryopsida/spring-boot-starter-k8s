@@ -4,7 +4,6 @@ package io.github.springboottemplate.controllers;
 import io.github.springboottemplate.entities.EchoHistory;
 import io.github.springboottemplate.services.EchoService;
 import java.time.Instant;
-import java.util.Date;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +38,7 @@ public class EchoApi {
                     .builder()
                     .id(UUID.randomUUID())
                     .message("Hello")
-                    .timestamp(Date.from(Instant.now()))
+                    .timestamp(Instant.now())
                     .build()
             )
             .then(Mono.just("Hello"));
@@ -48,12 +47,29 @@ public class EchoApi {
     @GetMapping("echo/{str}")
     @ResponseStatus(HttpStatus.OK)
     public Mono<String> echo(@PathVariable String str) {
-        return Mono.just("Echo: " + str);
+        return echoService
+            .recordHistory(
+                EchoHistory
+                    .builder()
+                    .id(UUID.randomUUID())
+                    .message("Echo: " + str)
+                    .timestamp(Instant.now())
+                    .build()
+            )
+            .then(Mono.just("Echo: " + str));
     }
 
     @GetMapping("echoquery")
     @ResponseStatus(HttpStatus.OK)
     public Mono<String> echoQuery(@RequestParam("name") String name) {
-        return Mono.just("Hello, " + name);
+        return this.echoService.recordHistory(
+                EchoHistory
+                    .builder()
+                    .id(UUID.randomUUID())
+                    .message("Hello, " + name)
+                    .timestamp(Instant.now())
+                    .build()
+            )
+            .then(Mono.just("Hello, " + name));
     }
 }
