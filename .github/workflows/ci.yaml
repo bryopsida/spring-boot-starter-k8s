@@ -25,7 +25,7 @@ jobs:
       with:
         node-version: 18
     - name: Execute Gradle Tasks
-      uses: gradle/gradle-build-action@v2.7.1
+      uses: gradle/gradle-build-action@v2.8.0
       with:
         gradle-version: 8.3
         arguments: k8sResource k8sHelm
@@ -55,7 +55,7 @@ jobs:
         with:
           node-version: 18
       - name: Execute Gradle Tasks
-        uses: gradle/gradle-build-action@v2.7.1
+        uses: gradle/gradle-build-action@v2.8.0
         with:
           gradle-version: 8.3
           arguments: spotlessCheck test jacocoReport bootJar
@@ -117,10 +117,10 @@ jobs:
       - name: Setup Docker buildx
         id: buildx
         timeout-minutes: 4
-        uses: docker/setup-buildx-action@7703e82fbced3d0c9eec08dff4429c023a5fd9a9
+        uses: docker/setup-buildx-action@885d1462b80bc1c1c7f0b00334ad271f09369c55
       - name: Log into registry
         timeout-minutes: 5
-        uses: docker/login-action@553b6f090f15b58451081ce157ff1929a266131d
+        uses: docker/login-action@cf8514a65188af1d4f94f8c28a7a4153af1088ce
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -206,7 +206,7 @@ jobs:
         run: k3d cluster create test-cluster --image rancher/k3s:${{ matrix.k8s-version }}
       - name: Log into registry
         timeout-minutes: 5
-        uses: docker/login-action@553b6f090f15b58451081ce157ff1929a266131d
+        uses: docker/login-action@cf8514a65188af1d4f94f8c28a7a4153af1088ce
         with:
             registry: ghcr.io
             username: ${{ github.actor }}
@@ -250,7 +250,7 @@ jobs:
         run: k3d cluster create test-cluster --image rancher/k3s:${{ matrix.k8s-version }}
       - name: Log into registry
         timeout-minutes: 5
-        uses: docker/login-action@553b6f090f15b58451081ce157ff1929a266131d
+        uses: docker/login-action@cf8514a65188af1d4f94f8c28a7a4153af1088ce
         with:
             registry: ghcr.io
             username: ${{ github.actor }}
