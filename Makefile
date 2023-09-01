@@ -17,5 +17,8 @@ create-namespace:
 build-chart:
 	./gradlew k8sResource k8sHelm
 
-deploy: build-chart
+build-dependencies:
+	helm dependency build ./build/jkube/helm/spring-boot-starter-k8s/kubernetes/
+
+deploy: build-chart build-dependencies
 	helm --namespace=$(HELM_NAMESPACE) upgrade --install spring-boot-starter-k8s ./build/jkube/helm/spring-boot-starter-k8s/kubernetes/

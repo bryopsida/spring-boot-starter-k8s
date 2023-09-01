@@ -129,6 +129,11 @@ kubernetes {
 	}
 	helm {
 		keywords = ['spring-boot', 'starter-template']
+		dependencies = [{
+			name = 'postgres'
+			repository = 'https://groundhog2k.github.io/helm-charts/'
+			version = '0.4.6'
+		}]
 	}
 }
 spotless {

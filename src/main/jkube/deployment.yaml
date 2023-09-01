@@ -21,6 +21,7 @@ spec:
       initContainers:
         - image: ${db_migration_job_image_repo}:${db_migration_job_image_tag}
           imagePullPolicy: ${image_pull_policy}
+          name: db-migration
           resources:
             limits:
               memory: ${limits_memory}

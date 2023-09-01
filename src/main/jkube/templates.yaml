@@ -22,6 +22,8 @@ parameters:
     value: "spring-boot-starter"
   - name: image_pull_policy
     value: "IfNotPresent"
+  - name: "postgres.settings.superuserPassword"
+    value: "postgres"
   - name: helm_namespace
     value: |
         {{ .Release.Namespace }}
