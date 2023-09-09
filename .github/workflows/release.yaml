@@ -1,0 +1,59 @@
+
+name: Release
+on:
+  release:
+   types:
+    - published
+jobs:
+  # step 1) take the sha we are on, and push a tag matching the release name
+  promote_tag:
+    name: 'Promote Tag'
+    timeout-minutes: 7
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # get the associated sha
+      - name: Get Existing Tag
+        run: echo "tag=sha-$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
+        id: current-tag
+      # login to the registry
+      - name: Log into registry
+        timeout-minutes: 5
+        uses: docker/login-action@a5609cb39f57be157c39b77359abfaa43aeaeb8f
+        with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+      # retag, this is same repo but could be tweaked to push to a prod repo
+      - name: Promote Tag
+        run: |
+            skopeo copy docker://ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ steps.current-tag.outputs.tag }} \
+                docker://ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ github.event.release.tag_name }}
+  # step 2) build and publish the helm chart to an oci repo.
+  publish_chart:
+    name: 'Publish Chart'
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 7
+    needs:
+      - promote_tag
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # login to the registry for oci pushes
+      - name: Log into registry
+        timeout-minutes: 5
+        uses: docker/login-action@a5609cb39f57be157c39b77359abfaa43aeaeb8f
+        with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+      # use gradle tasks to build, and publish chart
+      - name: Execute Gradle Tasks
+        uses: gradle/gradle-build-action@v2.8.0
+        with:
+            gradle-version: 8.3
+            arguments: k8sResource k8sHelm  
