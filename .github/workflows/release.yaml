@@ -44,7 +44,7 @@ jobs:
       # retag, this is same repo but could be tweaked to push to a prod repo
       - name: Promote Tag
         run: |
-            skopeo copy docker://ghcr.io/${{ github.repository }}:${{ steps.current-tag.outputs.tag }} \
+            skopeo copy --multi-arch all docker://ghcr.io/${{ github.repository }}:${{ steps.current-tag.outputs.tag }} \
                 docker://ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }} 
   # step 2) build and publish the helm chart to an oci repo.
   publish_chart:
