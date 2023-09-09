@@ -30,8 +30,8 @@ jobs:
       # retag, this is same repo but could be tweaked to push to a prod repo
       - name: Promote Tag
         run: |
-            skopeo copy docker://ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ steps.current-tag.outputs.tag }} \
-                docker://ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ github.event.release.tag_name }}
+            skopeo copy docker://ghcr.io/${{ github.repository }}:${{ steps.current-tag.outputs.tag }} \
+                docker://ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
   # step 2) build and publish the helm chart to an oci repo.
   publish_chart:
     name: 'Publish Chart'
@@ -56,4 +56,4 @@ jobs:
         uses: gradle/gradle-build-action@v2.8.0
         with:
             gradle-version: 8.3
-            arguments: k8sResource k8sHelm  
+            arguments: k8sResource k8sHelm k8sHelmPush
