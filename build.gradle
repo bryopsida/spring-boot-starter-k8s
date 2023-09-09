@@ -95,6 +95,8 @@ kubernetes {
             name = 'stable'
             url = "oci://ghcr.io/$System.env.HELM_REPO_PATH"
             type = 'OCI'
+            username = "$System.env.HELM_REPO_USERNAME"
+            password = "$System.env.HELM_REPO_PASSWORD"
         }
     }
 }
