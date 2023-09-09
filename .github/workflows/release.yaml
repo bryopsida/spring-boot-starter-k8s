@@ -74,6 +74,10 @@ jobs:
             password: ${{ secrets.GITHUB_TOKEN }}
       # use gradle tasks to build, and publish chart
       - name: Execute Gradle Tasks
+        env:
+          # build.gradle sets up oci://ghcr.io/
+          # this adds in a path for the oci repo
+          HELM_REPO_PATH: "${{ github.repository_owner }}/helm"
         uses: gradle/gradle-build-action@v2.8.0
         with:
             gradle-version: 8.3

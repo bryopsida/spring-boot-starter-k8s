@@ -91,6 +91,11 @@ kubernetes {
         }
     }
     helm {
+        stableRepository {
+            name = 'stable'
+            url = "oci://ghcr.io/$System.env.HELM_REPO_PATH"
+            type = 'OCI'
+        }
     }
 }
 spotless {
