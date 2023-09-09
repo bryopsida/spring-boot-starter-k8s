@@ -77,7 +77,7 @@ jobs:
       - name: Output Gradle Version
         id: version
         run: |
-          echo "version=$(./gradlew printVersion --console=plain | head -n 3 | tail -1)" >> $GITHUB_OUTPUT
+          echo "version=$(./gradlew --console=plain -q printVersion)" >> $GITHUB_OUTPUT
   build-image:
     name: Build Image
     runs-on: ubuntu-latest

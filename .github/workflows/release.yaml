@@ -36,10 +36,8 @@ jobs:
       - name: Output Gradle Version
         id: version
         run: |
-          echo "Gradle version output"
-          ./gradlew printVersion --console=plain
-          echo "New version will be $(./gradlew printVersion --console=plain | head -n 3 | tail -1)"
-          echo "version=$(./gradlew printVersion --console=plain | head -n 3 | tail -1)" >> $GITHUB_OUTPUT
+          echo "New version will be $(./gradlew --console=plain -q printVersion)"
+          echo "version=$(./gradlew --console=plain -q printVersion | head -n 3 | tail -1)" >> $GITHUB_OUTPUT
       # retag, this is same repo but could be tweaked to push to a prod repo
       - name: Promote Tag
         run: |
