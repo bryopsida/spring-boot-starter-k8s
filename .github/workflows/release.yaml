@@ -15,6 +15,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: actions/setup-java@v3
+        with:
+            distribution: "zulu"
+            java-version: "17"
       # get the associated sha
       - name: Get Existing Tag
         run: echo "tag=sha-$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
@@ -27,11 +31,17 @@ jobs:
             registry: ghcr.io
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
+      # get the version from gradle, this is used in the chart
+      # we need to ensure this tag exists before publishing the chart
+      - name: Output Gradle Version
+        id: version
+        run: |
+          echo "version=$(./gradlew printVersion --console=plain | head -n 3 | tail -1)" >> $GITHUB_OUTPUT
       # retag, this is same repo but could be tweaked to push to a prod repo
       - name: Promote Tag
         run: |
             skopeo copy docker://ghcr.io/${{ github.repository }}:${{ steps.current-tag.outputs.tag }} \
-                docker://ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
+                docker://ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }} 
   # step 2) build and publish the helm chart to an oci repo.
   publish_chart:
     name: 'Publish Chart'
@@ -43,6 +53,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: actions/setup-java@v3
+        with:
+            distribution: "zulu"
+            java-version: "17"
       # login to the registry for oci pushes
       - name: Log into registry
         timeout-minutes: 5
