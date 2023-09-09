@@ -24,4 +24,5 @@ COPY ./build/libs/*.jar /app/app.jar
 COPY ./docker-entrypoint.sh /app/docker-entrypoint.sh
 EXPOSE 8080/tcp
 EXPOSE 8081/tcp
+HEALTHCHECK NONE
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
