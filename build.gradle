@@ -93,10 +93,10 @@ kubernetes {
     helm {
         stableRepository {
             name = 'stable'
-            url = "oci://ghcr.io/$System.env.HELM_REPO_PATH"
+            url = "oci://ghcr.io/" + System.getenv("HELM_REPO_PATH")
             type = 'OCI'
-            username = "$System.env.HELM_REPO_USERNAME"
-            password = "$System.env.HELM_REPO_PASSWORD"
+            username = System.getenv("HELM_REPO_USERNAME")
+            password = System.getenv("HELM_REPO_PASSWORD")
         }
     }
 }
@@ -113,4 +113,9 @@ spotless {
 	target '*.md', '*.yaml', '*.yml'
     prettier()
   }
+}
+tasks.register('printProjectName') {
+    doLast {
+        println project.name
+    }
 }
