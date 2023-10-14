@@ -128,6 +128,7 @@ kubernetes {
 		}
 	}
 	helm {
+		apiVersion = 'v2'
 		keywords = ['spring-boot', 'starter-template']
 		dependencies = [{
 			name = 'postgres'
