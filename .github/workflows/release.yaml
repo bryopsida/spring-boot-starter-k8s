@@ -81,10 +81,10 @@ jobs:
           HELM_REPO_PASSWORD: "${{ secrets.GITHUB_TOKEN }}"
         with:
             gradle-version: 8.3
-            arguments: k8sResource k8sHelm
-      # we've already logged into the registry use helm to push, in the future use k8sHelmPush task
-      - name: Helm Publish
-        run: |
-          cd build/jkube/helm/$(./gradlew --console=plain -q printProjectName)/kubernetes/ && \
-            helm package . && \
-            helm push *.tgz oci://ghcr.io/${{ github.repository_owner }}/helm
+            arguments: k8sResource k8sHelm k8sHelmPush
+      # # we've already logged into the registry use helm to push, in the future use k8sHelmPush task
+      # - name: Helm Publish
+      #   run: |
+      #     cd build/jkube/helm/$(./gradlew --console=plain -q printProjectName)/kubernetes/ && \
+      #       helm package . && \
+      #       helm push *.tgz oci://ghcr.io/${{ github.repository_owner }}/helm
