@@ -93,7 +93,7 @@ kubernetes {
     helm {
         stableRepository {
             name = 'stable'
-            url = "oci://ghcr.io/" + System.getenv("HELM_REPO_PATH")
+            url = "https://ghcr.io/" + System.getenv("HELM_REPO_PATH")
             type = 'OCI'
             username = System.getenv("HELM_REPO_USERNAME")
             password = System.getenv("HELM_REPO_PASSWORD")
