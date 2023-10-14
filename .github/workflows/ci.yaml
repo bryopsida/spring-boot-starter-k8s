@@ -25,7 +25,7 @@ jobs:
       with:
         node-version: 18
     - name: Execute Gradle Tasks
-      uses: gradle/gradle-build-action@v2.8.0
+      uses: gradle/gradle-build-action@v2.9.0
       with:
         gradle-version: 8.3
         arguments: k8sResource k8sHelm
@@ -55,7 +55,7 @@ jobs:
         with:
           node-version: 18
       - name: Execute Gradle Tasks
-        uses: gradle/gradle-build-action@v2.8.0
+        uses: gradle/gradle-build-action@v2.9.0
         with:
           gradle-version: 8.3
           arguments: spotlessCheck test jacocoReport bootJar
@@ -117,7 +117,7 @@ jobs:
       - name: Setup Docker buildx
         id: buildx
         timeout-minutes: 4
-        uses: docker/setup-buildx-action@dedd61cf5d839122591f5027c89bf3ad27691d18
+        uses: docker/setup-buildx-action@5d9862498505fcac67b9f455d6e94ec0339f7b90
       - name: Log into registry
         timeout-minutes: 5
         uses: docker/login-action@b4bedf8053341df3b5a9f9e0f2cf4e79e27360c6
@@ -133,7 +133,7 @@ jobs:
       - name: Extract Docker metadata
         id: meta
         timeout-minutes: 5
-        uses: docker/metadata-action@6dfb6f1404065e66f9af1a56a7d39ad09efaaf9a
+        uses: docker/metadata-action@879dcbb708d40f8b8679d4f7941b938a086e23a7
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -149,7 +149,7 @@ jobs:
       - name: Build Docker image
         id: build
         timeout-minutes: 25
-        uses: docker/build-push-action@4c1b68d83ad20cc1a09620ca477d5bbbb5fa14d0
+        uses: docker/build-push-action@fdf7f43ecf7c1a5c7afe936410233728a8c2d9c2
         with:
             context: .
             load: true
@@ -175,7 +175,7 @@ jobs:
       - name: Push image
         id: push
         timeout-minutes: 60
-        uses: docker/build-push-action@4c1b68d83ad20cc1a09620ca477d5bbbb5fa14d0
+        uses: docker/build-push-action@fdf7f43ecf7c1a5c7afe936410233728a8c2d9c2
         with:
             context: .
             builder: ${{ steps.buildx.outputs.name }}
