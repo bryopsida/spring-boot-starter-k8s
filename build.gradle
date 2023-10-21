@@ -4,8 +4,9 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.3'
 	id 'org.eclipse.jkube.kubernetes' version '1.15-SNAPSHOT'
 	id 'com.palantir.git-version' version '3.0.0'
+	id 'org.liquibase.gradle' version '2.2.0'
 	id 'com.diffplug.spotless' version '6.22.0'
-    id 'jacoco'
+	id 'jacoco'
 }
 
 group = 'io.github.bryopsida'
@@ -45,8 +46,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
-    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+	implementation 'org.postgresql:r2dbc-postgresql:1.0.2.RELEASE'
+	implementation 'org.postgresql:postgresql:42.6.0'
+
+	liquibaseRuntime 'org.liquibase:liquibase-core:4.16.1'
+	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+	liquibaseRuntime 'info.picocli:picocli:4.6.1'
+	liquibaseRuntime "org.postgresql:postgresql"
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -60,62 +70,96 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+liquibase {
+	activities {
+		main {
+		changelogFile 'classpath:/changelog/v1.json'
+		classpath "$rootDir/src/main/resources/db"
+		username "postgres"
+		password "postgres"
+		logLevel "info"
+		url 'jdbc:postgresql://localhost:5432/spring-boot-starter'
+		}
+	}
+}
+
 kubernetes {
 	offline = false
 	images {
-        image {
-            name = 'ghcr.io/bryopsida/spring-boot-starter-k8s'
-            build {
+		image {
+			name = 'ghcr.io/bryopsida/spring-boot-starter-k8s'
+			build {
 				assembly {
-                    name = 'target'
-                }
-            }
-        }
-    }
-    access {
-        namespace = 'default'
-    }
-    generator {
-        includes = ['spring-boot']
-        config {
-            'spring-boot' {
-                color = 'always'
-            }
-        }
-    }
-    resources {
-        labels {
-            all {
-                testProject = 'spring-boot-stater-k8s'
-            }
-        }
-    }
-    helm {
-        stableRepository {
-            name = 'stable'
-            url = "https://ghcr.io/" + System.getenv("HELM_REPO_PATH")
-            type = 'OCI'
-            username = System.getenv("HELM_REPO_USERNAME")
-            password = System.getenv("HELM_REPO_PASSWORD")
-        }
-    }
+					name = 'target'
+				}
+			}
+		}
+	}
+	access {
+		namespace = 'default'
+	}
+	enricher {
+		excludes = ['jkube-expose']
+		config {
+			'jkube-healthcheck-spring-boot' {
+				path = '/actuator/health'
+			}
+		}
+	}
+	generator {
+		includes = ['spring-boot']
+		config {
+			'spring-boot' {
+				color = 'always'
+			}
+		}
+	}
+	resources {
+		labels {
+			all {
+				testProject = 'spring-boot-stater-k8s'
+			}
+		}
+		configMap {
+			name = 'liquibase-change-log-v1'
+			entries = [{
+				file = 'src/main/resources/db/changelog/v1.json'
+			}]
+		}
+	}
+	helm {
+		apiVersion = 'v2'
+		keywords = ['spring-boot', 'starter-template']
+		dependencies = [{
+			name = 'postgres'
+			repository = 'https://groundhog2k.github.io/helm-charts/'
+			version = '0.4.6'
+			condition = 'postgres.enabled'
+		}]
+	}
 }
 spotless {
-  java {
-    importOrder()
-    removeUnusedImports()
-    cleanthat()
-    prettier(['prettier': '2.8.8', 'prettier-plugin-java': '2.2.0']).config(['parser': 'java', 'tabWidth': 4])
-    formatAnnotations()
-    licenseHeader '/* (C) $YEAR */'
-  }
-  format 'styling', {
-	target '*.md', '*.yaml', '*.yml'
-    prettier()
-  }
+	java {
+		importOrder()
+		removeUnusedImports()
+		cleanthat()
+		prettier(['prettier': '2.8.8', 'prettier-plugin-java': '2.2.0']).config(['parser': 'java', 'tabWidth': 4])
+		formatAnnotations()
+		licenseHeader '/* (C) $YEAR */'
+	}
+	format 'misc', {
+		target '*.gradle', '*.md', '.gitignore', '.yml'
+		trimTrailingWhitespace()
+		indentWithTabs()
+		endWithNewline()
+	}
+	format 'styling', {
+		target '*.md', '*.yaml', '*.yml'
+		prettier()
+	}
 }
 tasks.register('printProjectName') {
-    doLast {
-        println project.name
-    }
+	doLast {
+		println project.name
+	}
 }

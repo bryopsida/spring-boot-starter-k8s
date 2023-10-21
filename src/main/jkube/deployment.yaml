@@ -14,6 +14,28 @@ spec:
     spec:
       imagePullSecrets:
         - name: ${pull_secret}
+      volumes:
+      - name: liquibase-changelog-volume
+        configMap:
+          name: liquibase-change-log-v1
+      - name: liquibase-properties
+        secret:
+          secretName: db-migration
+      initContainers:
+        - image: ${db_migration_job_image_repo}:${db_migration_job_image_tag}
+          imagePullPolicy: ${image_pull_policy}
+          name: db-migration
+          resources:
+            limits:
+              memory: ${limits_memory}
+            requests:
+              memory: ${requests_memory}
+          command: ["liquibase", "update", "--log-level=debug", "--defaultsFile=/liquibase/properties/liquibase.properties"]
+          volumeMounts:
+          - name: liquibase-changelog-volume
+            mountPath: /liquibase/changelog
+          - name: liquibase-properties
+            mountPath: /liquibase/properties
       containers:
         - image: ${image_repo}:${image_tag}
           imagePullPolicy: ${image_pull_policy}

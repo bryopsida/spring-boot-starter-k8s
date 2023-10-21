@@ -4,4 +4,4 @@ package io.github.springboottemplate.config;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class DbConfig {}
+public class SwaggerConfig {}

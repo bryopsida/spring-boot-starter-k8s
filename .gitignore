@@ -2,3 +2,5 @@ build
 bin
 .gradle
 .DS_Store
+.idea
+.vscode

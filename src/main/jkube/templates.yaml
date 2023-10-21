@@ -10,8 +10,30 @@ parameters:
     value: "ghcr.io/bryopsida/${name}"
   - name: image_tag
     value: "${version}"
+  - name: "db_migration_job_image_repo"
+    value: "liquibase/liquibase"
+  - name: "db_migration_job_image_tag"
+    value: "latest"
+  - name: "database_host"
+    value: "postgres"
+  - name: "database_port"
+    value: "5432"
+  - name: "database_name"
+    value: "spring-boot-starter"
+  - name: "database_schema"
+    value: "public"
   - name: image_pull_policy
     value: "IfNotPresent"
+  - name: "postgres.settings.superuserPassword"
+    value: "postgres"
+  - name: "postgres.userDatabase.name"
+    value: "spring-boot-starter"
+  - name: "postgres.userDatabase.user"
+    value: "spring-boot-starter"
+  - name: "postgres.userDatabase.password"
+    value: "changeit"
+  - name: "postgres.fullnameOverride"
+    value: "postgres"
   - name: helm_namespace
     value: |
         {{ .Release.Namespace }}

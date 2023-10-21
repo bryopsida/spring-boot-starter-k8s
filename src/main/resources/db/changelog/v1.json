@@ -1,0 +1,75 @@
+{ "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "1693053817129-1",
+        "author": "bryopsida",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "echo_pk"
+                    },
+                    "name": "id",
+                    "type": "UUID"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "timestamp",
+                    "type": "TIMESTAMP WITH TIME ZONE"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "message",
+                    "type": "TEXT"
+                  }
+                }
+              ]
+              ,
+              "tableName": "echo_history"
+            }
+          }
+        ]
+        
+      }
+    },
+    
+    {
+      "changeSet": {
+        "id": "1693053817129-2",
+        "author": "bryopsida",
+        "changes": [
+          {
+            "createIndex": {
+              "columns": [
+                {
+                  "column": {
+                    "name": "timestamp"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "timestamp"
+                  }
+                }
+              ]
+              ,
+              "indexName": "idx_timestamp",
+              "tableName": "echo_history"
+            }
+          }
+        ]
+        
+      }
+    }
+    
+  ]}
