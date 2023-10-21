@@ -20,9 +20,19 @@ parameters:
     value: "5432"
   - name: "database_name"
     value: "spring-boot-starter"
+  - name: "database_schema"
+    value: "public"
   - name: image_pull_policy
     value: "IfNotPresent"
   - name: "postgres.settings.superuserPassword"
+    value: "postgres"
+  - name: "postgres.userDatabase.name"
+    value: "spring-boot-starter"
+  - name: "postgres.userDatabase.user"
+    value: "spring-boot-starter"
+  - name: "postgres.userDatabase.password"
+    value: "changeit"
+  - name: "postgres.fullnameOverride"
     value: "postgres"
   - name: helm_namespace
     value: |

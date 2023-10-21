@@ -18,6 +18,9 @@ spec:
       - name: liquibase-changelog-volume
         configMap:
           name: liquibase-change-log-v1
+      - name: liquibase-properties
+        secret:
+          secretName: db-migration
       initContainers:
         - image: ${db_migration_job_image_repo}:${db_migration_job_image_tag}
           imagePullPolicy: ${image_pull_policy}
@@ -27,18 +30,12 @@ spec:
               memory: ${limits_memory}
             requests:
               memory: ${requests_memory}
-          command: ["liquibase", "update", "--changeLogFile=/liquibase/changelog/v1.json"]
-          env:
-          - name: LIQUIBASE_URL
-            value: "jdbc:postgresql://${database_host}:${database_port}/${database_name}"
-          # TODO: move credentials out to secrets as files
-          - name: LIQUIBASE_USERNAME
-            value: "postgres"
-          - name: LIQUIBASE_PASSWORD
-            value: "postgres"
+          command: ["liquibase", "update", "--log-level=debug", "--defaultsFile=/liquibase/properties/liquibase.properties"]
           volumeMounts:
           - name: liquibase-changelog-volume
             mountPath: /liquibase/changelog
+          - name: liquibase-properties
+            mountPath: /liquibase/properties
       containers:
         - image: ${image_repo}:${image_tag}
           imagePullPolicy: ${image_pull_policy}
