@@ -115,11 +115,6 @@ kubernetes {
 		}
 	}
 	resources {
-		labels {
-			all {
-				testProject = 'spring-boot-stater-k8s'
-			}
-		}
 		configMap {
 			name = 'liquibase-change-log-v1'
 			entries = [{
