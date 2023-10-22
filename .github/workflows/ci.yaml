@@ -282,9 +282,11 @@ jobs:
           ORG_NAME: ${{ github.repository_owner }}
         run: |
           export REPO_NAME={REPO_FULL_NAME#$ORG_NAME}
-          echo "repo-name=REPO_NAME" >> "$GITHUB_OUTPUT"
+          echo "repo-name=$REPO_NAME" >> "$GITHUB_OUTPUT"
         id: get-repo-name
       # install from OCI (latest version)
+      # adjust this to the oldest version that someone should be able to seemlessly upgrade from
+      # by default this is the latest published version
       - name: Install Oldest Supported Version
         run: |
-          helm --namespace test-upgrade --create-namespace install test-upgrade oci://ghcr.io/${{ github.repository_owner }}/helm/${{ steps.get-repo-name.outputs.repo-name }}
+          helm install test-upgrade oci://ghcr.io/${{ github.repository_owner }}/helm/${{ steps.get-repo-name.outputs.repo-name }} --namespace test-upgrade --create-namespace --debug --wait
