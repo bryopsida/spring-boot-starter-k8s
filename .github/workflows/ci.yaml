@@ -36,6 +36,29 @@ jobs:
         name: chart
         path: build/jkube/helm/spring-boot-starter-k8s/kubernetes/
         retention-days: 7
+  kics:
+    name: KICS
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - helm-lint
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: chart
+          path: chart/
+      - name: run kics Scan
+        uses: checkmarx/kics-github-action@v1.7.0
+        with:
+          # scanning two directories: ./terraform/ ./cfn-templates/ plus a single file
+          path: '.'
+          output_path: kicsResults/
+          output_formats: 'sarif,html'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: KICS
+          path: kicsResults
   java-unit-tests:
     name: "Test"
     runs-on: ubuntu-latest
