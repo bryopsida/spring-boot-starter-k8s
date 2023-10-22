@@ -172,6 +172,9 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ steps.short-sha.outputs.sha_tag }}
+          exit-code: '1'
+          ignore-unfixed: false
+          severity: 'CRITICAL,HIGH'
       - name: Push image
         id: push
         timeout-minutes: 60
