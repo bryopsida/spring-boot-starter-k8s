@@ -6,8 +6,8 @@ RUN apk add --no-cache wget && \
   apk del --no-cache wget
 
 ENV USER=docker
-ENV UID=9999
-ENV GID=9999
+ENV UID=10001
+ENV GID=10001
 
 WORKDIR /app
 RUN addgroup -g ${GID} docker && \
@@ -23,6 +23,5 @@ USER docker
 COPY ./build/libs/*.jar /app/app.jar
 COPY ./docker-entrypoint.sh /app/docker-entrypoint.sh
 EXPOSE 8080/tcp
-EXPOSE 8081/tcp
-HEALTHCHECK NONE
+EXPOSE 9090/tcp
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]

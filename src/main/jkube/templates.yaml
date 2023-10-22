@@ -4,6 +4,10 @@ parameters:
     value: "512Mi"
   - name: requests_memory
     value: "256Mi"
+  - name: requests_cpu
+    value: "512m"
+  - name: "limits_cpu"
+    value: "1024m"
   - name: pull_secret
     value: "regcred"
   - name: image_repo
@@ -13,7 +17,7 @@ parameters:
   - name: "db_migration_job_image_repo"
     value: "liquibase/liquibase"
   - name: "db_migration_job_image_tag"
-    value: "latest"
+    value: "4.24-alpine"
   - name: "database_host"
     value: "postgres"
   - name: "database_port"
@@ -23,17 +27,27 @@ parameters:
   - name: "database_schema"
     value: "public"
   - name: image_pull_policy
-    value: "IfNotPresent"
+    value: "Always"
   - name: "postgres.settings.superuserPassword"
     value: "postgres"
   - name: "postgres.userDatabase.name"
     value: "spring-boot-starter"
   - name: "postgres.userDatabase.user"
     value: "spring-boot-starter"
+  - name: "postgres.podSecurityContext.seccompProfile.type"
+    value: "RuntimeDefault"
   - name: "postgres.userDatabase.password"
     value: "changeit"
   - name: "postgres.fullnameOverride"
     value: "postgres"
+  - name: "postgres.resources.limits.cpu"
+    value: "512m"
+  - name: "postgres.resources.requests.cpu"
+    value: "512m"
+  - name: "postgres.resources.limits.memory"
+    value: "512Mi"
+  - name: "postgres.resources.requests.memory"
+    value: "512Mi"
   - name: helm_namespace
     value: |
         {{ .Release.Namespace }}

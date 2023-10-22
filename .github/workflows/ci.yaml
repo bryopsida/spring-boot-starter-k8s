@@ -36,6 +36,46 @@ jobs:
         name: chart
         path: build/jkube/helm/spring-boot-starter-k8s/kubernetes/
         retention-days: 7
+  kics:
+    name: KICS
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - helm-lint
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: chart
+          path: chart/
+      - name: Render Chart
+        run: |
+          helm dependency build ./chart/
+          helm template kics-test ./chart/ --namespace kics-test --output-dir ./render-result
+      - name: Get Repo Name
+        env: 
+            REPO_FULL_NAME: ${{ github.repository }}
+            ORG_NAME: ${{ github.repository_owner }}
+        run: |
+          export REPO_NAME=${REPO_FULL_NAME#"$ORG_NAME/"}
+          echo "Detected repo name as $REPO_NAME"
+          echo "repo-name=$REPO_NAME" >> "$GITHUB_OUTPUT"
+        id: get-repo-name
+      - name: KICS Scan
+        uses: checkmarx/kics-github-action@v1.7.0
+        with:
+          # scanning two directories: ./terraform/ ./cfn-templates/ plus a single file
+          path: 'render-result/'
+          output_path: kicsResults/
+          output_formats: 'sarif,html'
+          fail_on: high,medium
+          exclude_paths: render-result/${{ steps.get-repo-name.outputs.repo-name }}/charts/postgres,render-result/${{ steps.get-repo-name.outputs.repo-name }}/templates/db-migration-secret.yaml
+          exclude_queries: 611ab018-c4aa-4ba2-b0f6-a448337509a6,aee3c7d2-a811-4201-90c7-11c028be9a46,7c81d34c-8e5a-402b-9798-9f442630e678,8b36775e-183d-4d46-b0f7-96a6f34a723f,4a20ebac-1060-4c81-95d1-1f7f620e983b,48a5beba-e4c0-4584-a2aa-e6894e4cf424,b9c83569-459b-4110-8f79-6305aa33cb37,e84eaf4d-2f45-47b2-abe8-e581b06deb66
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: KICS
+          path: kicsResults
   java-unit-tests:
     name: "Test"
     runs-on: ubuntu-latest
@@ -89,6 +129,7 @@ jobs:
     needs:
       - helm-lint
       - java-unit-tests
+      - kics
     timeout-minutes: 10
     env:
       REGISTRY: ghcr.io/bryopsida
