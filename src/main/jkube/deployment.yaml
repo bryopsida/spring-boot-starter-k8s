@@ -17,8 +17,9 @@ spec:
         project: ${name}
         version: ${version}
     spec:
+      automountServiceAccountToken: false
       securityContext:
-        fsGroup: 9999
+        fsGroup: 10001
         seccompProfile:
           type: RuntimeDefault
       imagePullSecrets:
@@ -35,8 +36,8 @@ spec:
           imagePullPolicy: ${image_pull_policy}
           name: db-migration
           securityContext:
-            runAsUser: 9999
-            runAsGroup: 9999
+            runAsUser: 10001
+            runAsGroup: 10001
             runAsNonRoot: true
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true  
@@ -46,8 +47,10 @@ spec:
           resources:
             limits:
               memory: ${limits_memory}
+              cpu: ${limits_cpu}
             requests:
               memory: ${requests_memory}
+              cpu: ${requests_cpu}
           command: ["liquibase", "update", "--log-level=debug", "--defaultsFile=/liquibase/properties/liquibase.properties"]
           volumeMounts:
           - name: liquibase-changelog-volume
@@ -57,17 +60,37 @@ spec:
       containers:
         - image: ${image_repo}:${image_tag}
           imagePullPolicy: ${image_pull_policy}
+          ports:
+          - name: http-web
+            containerPort: 8080
+            port: 8080
+          - name: http-actuator
+            containerPort: 9090
+            port: 9090
+          readinessProbe:
+            httpGet:
+              port: http-actuator
+              path: /actuator/health/readiness
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet:
+              port: http-actuator
+              path: /actuator/health/liveness
+            initialDelaySeconds: 60
+            periodSeconds: 1
           securityContext:
-            runAsUser: 9999
-            runAsGroup: 9999
+            runAsUser: 10001
+            runAsGroup: 10001
             runAsNonRoot: true
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true  
             capabilities:
               drop:
-                - AL
+                - ALL
           resources:
             limits:
               memory: ${limits_memory}
+              cpu: ${limits_cpu}
             requests:
               memory: ${requests_memory}
+              cpu: ${requests_cpu}
