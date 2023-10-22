@@ -276,7 +276,15 @@ jobs:
         with:
           name: chart
           path: chart/
+      - name: Get Repo Name
+        env: 
+          REPO_FULL_NAME: ${{ github.repository }}
+          ORG_NAME: ${{ github.repository_owner }}
+        run: |
+          export REPO_NAME={REPO_FULL_NAME#$ORG_NAME}
+          echo "repo-name=REPO_NAME" >> "$GITHUB_OUTPUT"
+        id: get-repo-name
       # install from OCI (latest version)
       - name: Install Oldest Supported Version
         run: |
-          helm --namespace test-upgrade --create-namespace install test-upgrade oci://ghcr.io/${{ github.repository_owner }}/helm/${{ github.repository#split('/')[1] }}
+          helm --namespace test-upgrade --create-namespace install test-upgrade oci://ghcr.io/${{ github.repository_owner }}/helm/${{ steps.get-repo-name.outputs.repo-name }}
