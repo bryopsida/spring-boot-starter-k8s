@@ -282,6 +282,7 @@ jobs:
           ORG_NAME: ${{ github.repository_owner }}
         run: |
           export REPO_NAME={REPO_FULL_NAME#$ORG_NAME}
+          echo "Detected repo name as $REPO_NAME"
           echo "repo-name=$REPO_NAME" >> "$GITHUB_OUTPUT"
         id: get-repo-name
       # install from OCI (latest version)
