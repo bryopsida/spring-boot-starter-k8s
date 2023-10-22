@@ -277,7 +277,7 @@ jobs:
         with:
           name: chart
           path: chart/
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.4.0
-      - name: Install
-        run: ct install --charts chart/ --namespace test
+      # install from OCI (latest version)
+      - name: Install Oldest Supported Version
+        run: |
+          helm --namespace test-upgrade --create-namespace install test-upgrade oci://ghcr.io/${{ github.repository_owner }}/helm/${{ github.repository#split('/')[1] }}
