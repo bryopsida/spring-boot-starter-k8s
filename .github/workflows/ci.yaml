@@ -61,7 +61,7 @@ jobs:
           echo "Detected repo name as $REPO_NAME"
           echo "repo-name=$REPO_NAME" >> "$GITHUB_OUTPUT"
         id: get-repo-name
-      - name: run kics Scan
+      - name: KICS Scan
         uses: checkmarx/kics-github-action@v1.7.0
         with:
           # scanning two directories: ./terraform/ ./cfn-templates/ plus a single file
