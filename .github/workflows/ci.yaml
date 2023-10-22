@@ -267,9 +267,5 @@ jobs:
           path: chart/
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.4.0
-      - name: Deploy a database
-        run: |
-          helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/
-          helm --namespace test install postgres groundhog2k/postgres
       - name: Install
         run: ct install --charts chart/ --namespace test
