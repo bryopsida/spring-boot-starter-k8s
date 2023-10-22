@@ -295,4 +295,5 @@ jobs:
         run: |
           ls -la
           ls -la ./chart
+          helm dependency build ./chart
           helm upgrade test-upgrade  ./chart --namespace test --debug --wait
