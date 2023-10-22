@@ -290,4 +290,7 @@ jobs:
       # by default this is the latest published version
       - name: Install Oldest Supported Version
         run: |
-          helm install test-upgrade oci://ghcr.io/${{ github.repository_owner }}/helm/${{ steps.get-repo-name.outputs.repo-name }} --namespace test-upgrade --create-namespace --debug --wait
+          helm install test-upgrade oci://ghcr.io/${{ github.repository_owner }}/helm/${{ steps.get-repo-name.outputs.repo-name }} --namespace test --debug --wait
+      - name: Upgrade to PR Version
+        run: |
+          helm upgrade test-upgrade  charts/${{ steps.get-repo-name.outputs.repo-name }} --namespace test --debug --wait
