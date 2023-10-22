@@ -60,6 +60,7 @@ jobs:
           output_path: kicsResults/
           output_formats: 'sarif,html'
       - uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: KICS
           path: kicsResults
