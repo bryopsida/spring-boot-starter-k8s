@@ -6,8 +6,8 @@ RUN apk add --no-cache wget && \
   apk del --no-cache wget
 
 ENV USER=docker
-ENV UID=1000
-ENV GID=1000
+ENV UID=9999
+ENV GID=9999
 
 WORKDIR /app
 RUN addgroup -g ${GID} docker && \

@@ -17,6 +17,10 @@ spec:
         project: ${name}
         version: ${version}
     spec:
+      securityContext:
+        fsGroup: 9999
+        seccompProfile:
+          type: RuntimeDefault
       imagePullSecrets:
         - name: ${pull_secret}
       volumes:
@@ -30,6 +34,15 @@ spec:
         - image: ${db_migration_job_image_repo}:${db_migration_job_image_tag}
           imagePullPolicy: ${image_pull_policy}
           name: db-migration
+          securityContext:
+            runAsUser: 9999
+            runAsGroup: 9999
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true  
+            capabilities:
+              drop:
+                - ALL
           resources:
             limits:
               memory: ${limits_memory}
@@ -44,6 +57,15 @@ spec:
       containers:
         - image: ${image_repo}:${image_tag}
           imagePullPolicy: ${image_pull_policy}
+          securityContext:
+            runAsUser: 9999
+            runAsGroup: 9999
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true  
+            capabilities:
+              drop:
+                - AL
           resources:
             limits:
               memory: ${limits_memory}
