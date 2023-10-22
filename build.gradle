@@ -12,6 +12,10 @@ plugins {
 group = 'io.github.bryopsida'
 version = gitVersion().replace(".dirty", "-dirty")
 
+ext {
+set('snakeyaml.version','2.2')
+}
+
 java {
 	sourceCompatibility = '17'
 }
@@ -51,6 +55,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
 	implementation 'org.postgresql:r2dbc-postgresql:1.0.2.RELEASE'
 	implementation 'org.postgresql:postgresql:42.6.0'
+
 
 	liquibaseRuntime 'org.liquibase:liquibase-core:4.24.0'
 	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.3'
