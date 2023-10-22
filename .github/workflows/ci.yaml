@@ -117,6 +117,7 @@ jobs:
     needs:
       - helm-lint
       - java-unit-tests
+      - kics
     timeout-minutes: 10
     env:
       REGISTRY: ghcr.io/bryopsida
