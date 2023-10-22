@@ -48,11 +48,15 @@ jobs:
         with:
           name: chart
           path: chart/
+      - name: Render Chart
+        run: |
+          helm dependency build ./chart/
+          helm template kics-test ./chart/ --namespace kics-test --output-dir ./render-result
       - name: run kics Scan
         uses: checkmarx/kics-github-action@v1.7.0
         with:
           # scanning two directories: ./terraform/ ./cfn-templates/ plus a single file
-          path: '.'
+          path: 'render-result/'
           output_path: kicsResults/
           output_formats: 'sarif,html'
       - uses: actions/upload-artifact@v3
