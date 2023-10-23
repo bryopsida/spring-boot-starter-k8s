@@ -20,7 +20,7 @@ jobs:
       with:
         distribution: "zulu"
         java-version: "17"
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
         node-version: 18
     - name: Execute Gradle Tasks
@@ -90,7 +90,7 @@ jobs:
         with:
           distribution: "zulu"
           java-version: "17"
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Execute Gradle Tasks
@@ -142,7 +142,7 @@ jobs:
         with:
           distribution: "zulu"
           java-version: "17"
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Download Artifacts
