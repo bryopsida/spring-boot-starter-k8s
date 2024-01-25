@@ -74,7 +74,7 @@ jobs:
             password: ${{ secrets.GITHUB_TOKEN }}
       # use gradle tasks to build the chart
       - name: Execute Gradle Tasks
-        uses: gradle/gradle-build-action@v2.11.1
+        uses: gradle/gradle-build-action@v2.12.0
         env:
           HELM_REPO_PATH: "${{ github.repository_owner }}/helm"
           HELM_REPO_USERNAME: "${{ github.actor }}"
