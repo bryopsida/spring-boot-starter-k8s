@@ -24,7 +24,7 @@ jobs:
       with:
         node-version: 18
     - name: Execute Gradle Tasks
-      uses: gradle/gradle-build-action@v2.11.1
+      uses: gradle/gradle-build-action@v2.12.0
       with:
         gradle-version: 8.3
         arguments: k8sResource k8sHelm
@@ -94,7 +94,7 @@ jobs:
         with:
           node-version: 18
       - name: Execute Gradle Tasks
-        uses: gradle/gradle-build-action@v2.11.1
+        uses: gradle/gradle-build-action@v2.12.0
         with:
           gradle-version: 8.3
           arguments: spotlessCheck test jacocoReport bootJar
