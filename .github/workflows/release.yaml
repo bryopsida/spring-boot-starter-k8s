@@ -29,7 +29,7 @@ jobs:
       # login to the registry
       - name: Log into registry
         timeout-minutes: 5
-        uses: docker/login-action@3d58c274f17dffee475a5520cbe67f0a882c4dbb
+        uses: docker/login-action@83a00bc1ab5ded6580f31df1c49e6aaa932d840d
         with:
             registry: ghcr.io
             username: ${{ github.actor }}
@@ -67,7 +67,7 @@ jobs:
       # login to the registry for oci pushes
       - name: Log into registry
         timeout-minutes: 5
-        uses: docker/login-action@3d58c274f17dffee475a5520cbe67f0a882c4dbb
+        uses: docker/login-action@83a00bc1ab5ded6580f31df1c49e6aaa932d840d
         with:
             registry: ghcr.io
             username: ${{ github.actor }}
