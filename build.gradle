@@ -90,6 +90,13 @@ liquibase {
 
 kubernetes {
 	offline = false
+	enricher {
+		config {
+			'kube-well-known-labels' {
+				enabled = false
+			}
+		}
+	}
 	images {
 		image {
 			name = 'ghcr.io/bryopsida/spring-boot-starter-k8s'

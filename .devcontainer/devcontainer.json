@@ -12,11 +12,15 @@
     "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
       "packages": "net-tools,iputils-ping,build-essential"
-    }
+    },
+    "ghcr.io/devcontainers-contrib/features/gradle-sdkman:2": {}
   },
   "customizations": {
     "vscode": {
-      "extensions": [],
+      "extensions": [
+        "vscjava.vscode-gradle",
+        "vscjava.vscode-java-pack"
+      ],
       "settings": {
         "terminal.integrated.profiles.linux": {
           "zsh": {
