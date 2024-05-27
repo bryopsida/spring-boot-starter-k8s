@@ -1,11 +1,6 @@
 labels:
   project: ${name}
   version: ${version}
-  app.kubernetes.io/name: ${name}
-  app.kubernetes.io/instance: ${helm_release_name}
-  app.kubernetes.io/version: ${version}
-  app.kubernetes.io/part-of: ${name}
-  app.kubernetes.io/managed-by: helm
 spec:
   type: ClusterIP
   ports:
