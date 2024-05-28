@@ -160,7 +160,7 @@ jobs:
         uses: docker/setup-buildx-action@5138f76647652447004da686b2411557eaf65f33
       - name: Log into registry
         timeout-minutes: 5
-        uses: docker/login-action@db779458846adfddbc884a8e8b86376e277d24b2
+        uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -257,7 +257,7 @@ jobs:
         run: k3d cluster create test-cluster --image rancher/k3s:${{ matrix.k8s-version }}
       - name: Log into registry
         timeout-minutes: 5
-        uses: docker/login-action@db779458846adfddbc884a8e8b86376e277d24b2
+        uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446
         with:
             registry: ghcr.io
             username: ${{ github.actor }}
@@ -298,7 +298,7 @@ jobs:
         run: k3d cluster create test-cluster --image rancher/k3s:${{ matrix.k8s-version }}
       - name: Log into registry
         timeout-minutes: 5
-        uses: docker/login-action@db779458846adfddbc884a8e8b86376e277d24b2
+        uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446
         with:
             registry: ghcr.io
             username: ${{ github.actor }}
