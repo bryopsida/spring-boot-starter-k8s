@@ -189,7 +189,7 @@ jobs:
       - name: Build Docker image
         id: build
         timeout-minutes: 25
-        uses: docker/build-push-action@4367da978b557b70738a51fed31c93e6a240dfb3
+        uses: docker/build-push-action@94f8f8c2eec4bc3f1d78c1755580779804cb87b2
         with:
             context: .
             load: true
@@ -225,7 +225,7 @@ jobs:
       - name: Push image
         id: push
         timeout-minutes: 60
-        uses: docker/build-push-action@4367da978b557b70738a51fed31c93e6a240dfb3
+        uses: docker/build-push-action@94f8f8c2eec4bc3f1d78c1755580779804cb87b2
         with:
             context: .
             builder: ${{ steps.buildx.outputs.name }}
