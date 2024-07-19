@@ -157,7 +157,7 @@ jobs:
       - name: Setup Docker buildx
         id: buildx
         timeout-minutes: 4
-        uses: docker/setup-buildx-action@2ad185228a349d19414702819e06df9fa4314287
+        uses: docker/setup-buildx-action@49a04d68900b1d260da9b3f06f52638d56cd8ad1
       - name: Log into registry
         timeout-minutes: 5
         uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446
