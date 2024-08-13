@@ -62,7 +62,7 @@ jobs:
           echo "repo-name=$REPO_NAME" >> "$GITHUB_OUTPUT"
         id: get-repo-name
       - name: KICS Scan
-        uses: checkmarx/kics-github-action@v2.1.1
+        uses: checkmarx/kics-github-action@v2.1.2
         with:
           # scanning two directories: ./terraform/ ./cfn-templates/ plus a single file
           path: 'render-result/'
