@@ -54,7 +54,7 @@ dependencies {
 	implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
 	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.6.0'
 	implementation 'org.postgresql:r2dbc-postgresql:1.0.7.RELEASE'
-	implementation 'org.postgresql:postgresql:42.7.4'
+	implementation 'org.postgresql:postgresql:42.7.5'
 
 
 	liquibaseRuntime 'org.liquibase:liquibase-core:4.30.0'
